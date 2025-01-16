@@ -1,5 +1,6 @@
 import streamlit as st
 import geopandas
+import numpy as np
 
 
 @st.cache_data(show_spinner=False)
@@ -34,3 +35,22 @@ def get_color(brand: str) -> str:
         return "#C7D51F"
 
     return "#808080"
+
+
+def get_color_scale_bins(curve_type: str, n_bins: int, max_value: int):
+    match curve_type:
+        case "Linear":
+            return np.linspace(start=0, stop=max_value, num=n_bins, endpoint=True)
+        case "Logarithmic":
+            return np.concatenate(
+                [
+                    [0],
+                    np.geomspace(
+                        start=1,
+                        stop=max_value,
+                        num=n_bins,
+                        endpoint=True,
+                        dtype=np.int32,
+                    ),
+                ]
+            )

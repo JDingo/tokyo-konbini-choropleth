@@ -2,7 +2,7 @@ import streamlit as st
 from streamlit_folium import st_folium
 import folium
 
-from utils import create_color_dict
+from utils import create_color_dict, get_color_scale_bins
 from geodata_functions import load_geodata, create_choropleth_gdf
 
 st.set_page_config(
@@ -31,6 +31,7 @@ min_lat, max_lat = (
 
 with st.sidebar:
     st.title("Convenience Stores in Tokyo - Density")
+
     st.subheader("Choropleth Settings")
     st.slider(
         key="choropleth_square_distance",
@@ -39,6 +40,23 @@ with st.sidebar:
         step=0.5,
         label="Choropleth Square Distance (km)",
         value=2.0,
+    )
+
+    st.subheader("Color Settings")
+    st.segmented_control(
+        key="color_scale",
+        label="Color Scaling",
+        options=["Linear", "Logarithmic"],
+        selection_mode="single",
+        default="Linear",
+    )
+    st.slider(
+        key="n_bins_slider",
+        min_value=5,
+        max_value=10,
+        step=1,
+        label="Number of bins",
+        value=5,
     )
 
 m = folium.Map(
@@ -60,7 +78,7 @@ popup = folium.GeoJsonPopup(
 
 folium.GeoJson(
     data=geodata,
-    name="Convenience Store",
+    name="Convenience Stores",
     marker=folium.Circle(
         fields=["name", "shop"],
         radius=10,
@@ -76,6 +94,11 @@ choropleth_data = create_choropleth_gdf(
     st.session_state["choropleth_square_distance"],
     bounding_area=tokyo_area_geometry,
 )
+value_color_bins = get_color_scale_bins(
+    st.session_state["color_scale"],
+    st.session_state["n_bins_slider"],
+    choropleth_data["store_count"].max(),
+)
 
 choropleth_data["key"] = [str(x) for x in choropleth_data.index]
 folium.Choropleth(
@@ -85,6 +108,8 @@ folium.Choropleth(
     data=choropleth_data,
     columns=["key", "store_count"],
     key_on="feature.properties.key",
+    bins=value_color_bins,
+    name="Choropleth",
 ).add_to(m)
 folium.LayerControl().add_to(m)
 
