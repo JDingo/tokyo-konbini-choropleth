@@ -5,6 +5,10 @@ import folium
 from utils import create_color_dict
 from geodata_functions import load_geodata, create_choropleth_gdf
 
+st.set_page_config(
+    page_title="Tokyo Konbini Choropleth Map", page_icon=":convenience_store:"
+)
+
 
 DATA_FILE = "data/konbini_locations_processed.geojson"
 TOKYO_AREA_GEOJSON = "data/tokyo_area.geojson"
