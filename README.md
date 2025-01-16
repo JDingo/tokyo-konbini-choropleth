@@ -1,6 +1,6 @@
 # Convenience Store Density in Tokyo - Visualization
 
-Mapping visualization of convenience store density in Tokyo.
+Mapping visualization of convenience store density in Tokyo. Accessible from https://jdingo-tokyo-konbini-choropleth.streamlit.app/.
 
 ![Image of the application's dashboard](img/dashboard.jpg)
 
