@@ -3,7 +3,8 @@ import streamlit as st
 from shapely.geometry import Polygon, MultiPolygon
 import numpy
 
-# Source: University of Wisconsin-Madison https://www.sco.wisc.edu/2022/01/21/how-big-is-a-degree/
+# Source: University of Wisconsin-Madison
+# https://www.sco.wisc.edu/2022/01/21/how-big-is-a-degree/
 LATITUDE_KILOMETER_RATIO = 1 / 111.1
 LONGITUDE_KILOMETER_RATIO = 1 / 96.2
 
