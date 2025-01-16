@@ -1,14 +1,12 @@
 import streamlit as st
-import geojson
+import geopandas
 
 
 @st.cache_data(show_spinner=False)
-def create_color_dict(geojson: geojson.GeoJSON) -> dict:
-    print("Creating color dict...")
+def create_color_dict(_gdf: geopandas.GeoDataFrame) -> dict:
     color_dict = {}
 
-    for feature in geojson["features"]:
-        brand = feature["properties"]["brand"]
+    for brand in _gdf["brand"]:
         if brand not in color_dict:
             color_dict[brand] = get_color(brand)
 

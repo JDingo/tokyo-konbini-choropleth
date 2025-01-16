@@ -38,5 +38,39 @@ gdf = gdf.loc[
 ]
 
 gdf = gdf[~gdf["brand"].isnull()]
+gdf["geometry_type"] = gdf["geometry"].type
+
+
+def solve_coordinates_long(x):
+    if x["geometry_type"] == "LineString":
+        return x["geometry"].coords.xy[0][0]
+    elif x["geometry_type"] == "Polygon":
+        return x["geometry"].exterior.coords.xy[0][0]
+    elif x["geometry_type"] == "Point":
+        return x["geometry"].coords.xy[0][0]
+    else:
+        print("Unknown geometry type!")
+
+
+def solve_coordinates_lat(x):
+    if x["geometry_type"] == "LineString":
+        return x["geometry"].coords.xy[1][0]
+    elif x["geometry_type"] == "Polygon":
+        return x["geometry"].exterior.coords.xy[1][0]
+    elif x["geometry_type"] == "Point":
+        return x["geometry"].coords.xy[1][0]
+    else:
+        print("Unknown geometry type!")
+
+
+gdf["first_coordinate_longitude"] = gdf.apply(
+    lambda x: solve_coordinates_long(x),
+    axis=1,
+)
+
+gdf["first_coordinate_latitude"] = gdf.apply(
+    lambda x: solve_coordinates_lat(x),
+    axis=1,
+)
 
 gdf.to_file("konbini_locations_processed.geojson", driver="GeoJSON")
